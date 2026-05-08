@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from api.models import Evento, Categorias, Imagenes, Proveedor
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -11,10 +11,12 @@ class CategoriaSerializer(serializers.ModelSerializer):
 class ImagenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Imagenes
-        fields = '__all__'
+        fields = ['url', 'nombre']
 
 
 class EventoSerializer(serializers.ModelSerializer):
+    categoria_nombre = serializers.ReadOnlyField(source='idcategoria.nombre')
+    imagenes = ImagenSerializer(many=True, read_only=True, source='imagenes_set')
     class Meta:
         model = Evento
         fields = '__all__'
